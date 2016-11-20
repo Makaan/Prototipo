@@ -1,0 +1,26 @@
+{
+  "name": "prototipo",
+  "version": "0.0.1",
+  "description": "Prueba de concepto para manejo de juegos",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Makaan/Prototipo.git"
+  },
+  "author": "Nestor Figliuolo",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Makaan/Prototipo/issues"
+  },
+  "homepage": "https://github.com/Makaan/Prototipo#readme",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "bower": "^1.7.9",
+    "express": "^4.14.0",
+    "jquery": "^3.1.1",
+    "socket.io": "^1.5.1"
+  }
+}

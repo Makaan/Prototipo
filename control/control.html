@@ -6,19 +6,37 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		
 		<link rel="stylesheet" href="/dependencias/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="controlStyle.css">
 
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="/dependencias/jquery-3.1.1.min.js"></script>
 		<script src="clientControlScript.js"></script>
   </head>
   <body class="container-fluid">
+		<!-- Informacion del jugador -->
 		<div class="row">
-			<div class="col-xs-12">
-				<label for="nombre">Dibujar en:</label>
-				<input type="text" class="form-control" id="x"/>
-				<input type="text" class="form-control" id="y"/>
-				<button id="boton" class="btn btn-standard">boton</button>
-				<div id="status"></div>
+			<div class="columna col-xs-12">
+				<label for="nombre">Nombre:</label>
+				<input type="text" class="form-control" id="nombre"/>
+			</div>
+		</div>
+		<!-- Botones -->
+		<div class="row">
+			<div class="columna col-xs-6 col-xs-offset-3">
+				<button id="botonArriba" class="btn btn-standard btn-block">Arriba</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="columna col-xs-6">
+				<button id="botonIzquierda" class="btn btn-standard btn-block">Izquierda</button>
+			</div>
+			<div class="columna col-xs-6">
+				<button id="botonDerecha" class="btn btn-standard btn-block">Derecha</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="columna col-xs-6 col-xs-offset-3">
+				<button id="botonAbajo" class="btn btn-standard btn-block">Abajo</button>
 			</div>
 		</div>
   </body>

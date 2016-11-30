@@ -6,6 +6,7 @@ var io = require('socket.io')(http);
 app.use(express.static(__dirname + '/control'));
 app.use(express.static(__dirname + '/visor'));
 app.use('/dependencias',express.static(__dirname + '/dependencias'));
+app.use('/resources',express.static(__dirname+'/resources'));
 
 //Archivo visor
 app.get('/visor', function enviarVisor(req, res){
@@ -38,56 +39,37 @@ controlNsp.on('connection',function(socket) {
   
   //Cuando ser recibe el nombre
   socket.on('nombre',function setNombre(nombreControl) {
-    var encontre=false;
-    for(var i=0;i<controles.length;i++) {
-      if(controles[i].nombre===nombreControl) {
-         encontre=true;
-         break;
-      }
-    }
-    //Si el control no existe creo uno nuevo
-    if(!encontre) {
-      var obj={
-        'nombre':nombreControl,
-        'x':500,
-        'y':300
-      };
-      controles.push(obj);
-      //Lo dibujo en todos los visores
-      visorNsp.emit('dibujar',obj);
+    if(controles.indexOf(nombreControl)===-1) {
+      controles.push(nombreControl);
+      visorNsp.emit('newPlayer',nombreControl);
     }
   });
   
-  socket.on('botonArriba', function botonArriba() {
-    visorNsp.emit('botonArriba');
+  socket.on('pressArriba', function(name) {
+    visorNsp.emit('botonArribaPress',name);
   });
   
-  socket.on('pressDerecha', function() {
-    console.log('press R');
-    visorNsp.emit('botonDerechaPress');
+  socket.on('pressupArriba', function(name) {
+    visorNsp.emit('botonArribaPressup',name);
   });
   
-  socket.on('pressupDerecha', function() {
-    console.log('pressup R');
-    visorNsp.emit('botonDerechaPressup');
+  socket.on('pressDerecha', function(name) {
+    visorNsp.emit('botonDerechaPress',name);
   });
   
-  socket.on('pressIzquierda', function() {
-    console.log('press L');
-    visorNsp.emit('botonIzquierdaPress');
+  socket.on('pressupDerecha', function(name) {
+    visorNsp.emit('botonDerechaPressup',name);
   });
   
-  socket.on('pressupIzquierda', function() {
-    console.log('pressup L');
-    visorNsp.emit('botonIzquierdaPressup');
+  socket.on('pressIzquierda', function(name) {
+    visorNsp.emit('botonIzquierdaPress',name);
+  });
+  
+  socket.on('pressupIzquierda', function(name) {
+    visorNsp.emit('botonIzquierdaPressup',name);
   });
 });
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
-});
-
-app.use(express.static(__dirname + '/phaser'));
-app.get('/phaser',function(req,res) {
-  res.sendFile(__dirname+'/phaser/index.html');
 });

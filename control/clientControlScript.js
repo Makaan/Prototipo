@@ -1,6 +1,6 @@
 var socket = io('/control');
 
-
+var name;
 
 $( document ).ready(function() {
   
@@ -8,59 +8,44 @@ $( document ).ready(function() {
     //Me conecto al server
     socket.connect('http://10.3.184.216:3000');
     //Le envio al servidor el nombre del jugador.
-    console.log($('#nombre').val());
-    socket.emit('nombre',$('#nombre').val());
+    
+    name=$('#nombre').val();
+    if(!name)
+      name="default";
+    socket.emit('nombre',name);
+    $('#name').hide();
   });
   
-  $('#botonArriba').click(function botonArriba() {
-    socket.emit('botonArriba');
-  });
-  
-  $('#botonDerecha').mousedown(function botonArriba() {
-    socket.emit('mousedown');
-  });
-  
-   $('#botonDerecha').mouseup(function botonArriba() {
-    socket.emit('mouseup');
-  });
-  
-  $('#botonAbajo').click(function botonArriba() {
-    socket.emit('botonAbajo');
-  });
-  
-  $('#botonIzquierda').click(function botonArriba() {
-    socket.emit('botonIzquierda');
-  });
   //Listener para tap de boton derecho
   var botonDerecha = document.getElementById('botonDerecha');
   var tapDerecha = new Hammer(botonDerecha);
   // listen to events...
   tapDerecha.on("press", function() {
-      console.log('press R');
-      socket.emit('pressDerecha');
-      
+    socket.emit('pressDerecha',name); 
   });
   tapDerecha.on('pressup', function() {
-    console.log('pressup R');
-    socket.emit('pressupDerecha');
+    socket.emit('pressupDerecha',name);
   });
   
   //Listener para tap de boton izquierdo
   var tapIzquierda = new Hammer(document.getElementById('botonIzquierda'));
   // listen to events...
   tapIzquierda.on("press", function() {
-      console.log('press L');
-      socket.emit('pressIzquierda');
-      
+    socket.emit('pressIzquierda',name);
   });
   tapIzquierda.on('pressup', function() {
-    console.log('pressup L');
-    socket.emit('pressupIzquierda');
+    socket.emit('pressupIzquierda',name);
   });
   
   var tapArriba=new Hammer(document.getElementById('botonArriba'));
-  tapArriba.on('tap',function() {
-    socket.emit('botonArriba');
+  
+  tapArriba.on('press',function() {
+    socket.emit('pressArriba',name);
   });
+  
+  tapArriba.on('pressup',function() {
+    socket.emit('pressupArriba',name);
+  });
+  
 });
 

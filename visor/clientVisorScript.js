@@ -19,6 +19,7 @@ $( document ).ready(function() {
 		//  We're going to be using physics, so enable the Arcade Physics system
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 		game.stage.backgroundColor = '#0072bc';
+		game.stage.disableVisibilityChange=true;
 		
 	
 	}
@@ -55,6 +56,12 @@ $( document ).ready(function() {
 			'text':text,
 			'velocity':0
 		};
+	});
+	
+	socket.on('disconnected',function(name) {
+		entities[name].player.destroy();
+		entities[name].text.destroy();
+		delete entities[name];
 	});
 	
 	socket.on('botonArribaPress', function(name) {

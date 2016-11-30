@@ -32,17 +32,15 @@ visorNsp.on('connection', function(){
 });
 
 //Controles
-var controles=[];
+var controles={};
 
 controlNsp.on('connection',function(socket) {
   console.log('control conectado');
-  
+  controles[socket]={'name':""};
   //Cuando ser recibe el nombre
   socket.on('nombre',function setNombre(nombreControl) {
-    if(controles.indexOf(nombreControl)===-1) {
-      controles.push(nombreControl);
-      visorNsp.emit('newPlayer',nombreControl);
-    }
+    controles[socket].name=nombreControl;
+    visorNsp.emit('newPlayer',nombreControl);
   });
   
   socket.on('pressArriba', function(name) {
@@ -67,6 +65,11 @@ controlNsp.on('connection',function(socket) {
   
   socket.on('pressupIzquierda', function(name) {
     visorNsp.emit('botonIzquierdaPressup',name);
+  });
+  
+  socket.on('disconnect', function() {
+    visorNsp.emit('disconnected',controles[socket].name);
+    delete controles[socket];
   });
 });
 

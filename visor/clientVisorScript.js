@@ -1,13 +1,11 @@
 var socket=io('/visor');
 
+//Guardo aca las entidades en el juego
 var entities={};
 
 $( document ).ready(function() {
 	
-	
-	console.log("documento cargado");
 	socket.connect('http://192.168.0.100:3000');
-	console.log('conectado '+(socket.connected));
 	
 	var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update});
 	
@@ -59,35 +57,36 @@ $( document ).ready(function() {
 	});
 	
 	socket.on('disconnected',function(name) {
+		console.log(name);
 		entities[name].player.destroy();
 		entities[name].text.destroy();
 		delete entities[name];
 	});
 	
-	socket.on('botonArribaPress', function(name) {
+	socket.on('upPress', function(name) {
 		entities[name].velocity=300;
 	});
 	
-	socket.on('botonArribaPressup',function(name) {
+	socket.on('upPressup',function(name) {
 		entities[name].velocity=0;
 	});
 	
-	socket.on('botonDerechaPress', function(name) {
+	socket.on('rightPress', function(name) {
 		entities[name].player.body.angularVelocity = 200;
 		entities[name].player.animations.play('right');
 	});
 	
-	socket.on('botonDerechaPressup', function(name) {
+	socket.on('rightPressup', function(name) {
 		entities[name].player.body.angularVelocity = 0;
 		entities[name].player.animations.play('idle');
 	});
 	
-	socket.on('botonIzquierdaPress', function(name) {
+	socket.on('leftPress', function(name) {
 		entities[name].player.body.angularVelocity = -200;
 		entities[name].player.animations.play('left');
 	});
 	
-	socket.on('botonIzquierdaPressup', function(name) {
+	socket.on('leftPressup', function(name) {
 		entities[name].player.body.angularVelocity = 0;
 		entities[name].player.animations.play('idle');
 	});

@@ -6,7 +6,7 @@ $( document ).ready(function() {
   
   $('#connect').click(function conectar() {
     //Me conecto al server
-    socket.connect('http://10.3.184.216:3000');
+    socket.connect('http://192.168.1.110:3000');
     //Le envio al servidor el nombre del jugador.
     name=$('#playerName').val();
     if(!name)

@@ -3,34 +3,57 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-//Recursos estaticos
-app.use(express.static(__dirname + '/control'));
-app.use(express.static(__dirname + '/visor'));
-app.use('/dependencias',express.static(__dirname + '/dependencias'));
-app.use('/resources',express.static(__dirname+'/resources'));
-
-//Archivo visor
-app.get('/visor', function enviarVisor(req, res){
-  res.sendFile(__dirname + '/visor/visor.html');
-});
-
-
-//Archivo con control
-app.get('/control', function enviarControl(req, res) {
-  res.sendFile(__dirname + '/control/control.html');
-});
+ 
+	app.use(express.static(__dirname + '/control'));
+	app.use(express.static(__dirname + '/visor'));
+	app.use('/dependencias',express.static(__dirname + '/dependencias'));
+	app.use('/resources',express.static(__dirname+'/resources'));
+	
+	//Archivo visor
+	app.get('/visor', function enviarVisor(req, res){
+	  res.sendFile(__dirname + '/visor/visor.html');
+	});
+	
+	
+	//Archivo con control
+	app.get('/control', function enviarControl(req, res) {
+	  res.sendFile(__dirname + '/control/control.html');
+	});
 
 //Namespaces para controls y visores
 var visorNsp=io.of('/visor');
 var controlNsp=io.of('/control');
 
-visorNsp.on('connection', function(){
-  console.log("visor conectado");
-  //Cuando se conecta un visor dibuja todo
-  for(var i=0;i<controls.length;i++) {
-    socket.emit('dibujar',controls[i]);
+var visors=[];
+
+visorNsp.on('connection', function(socket){
+  //Cuando se conecta un visor dibuja todo pidiendole a uno de los visores, si no no hace nada
+  console.log('conectado');
+	if(visors.indexOf(socket)===-1)
+		visors.push(socket);
+	console.log(visors.length);
+  
+	
+	
+  socket.on('disconnect',function() {
+    var index=visors.indexOf(socket);
+    if(index>-1)
+      visors.splice(index,1);
+		console.log('desconectado '+visors.length);
+  });
+  
+	socket.on('stateNew',function stateNew() {
+		if(visors.indexOf(socket)!==0) {
+			console.log('emit '+socket.id+" "+visors[0].id);
+			visors[0].emit('getState');
+			visors[0].on('state',function(entities) {
+				socket.emit('setState',entities);
+			});
   }
+	});
 });
+
+
 
 //Controles
 var controls={};
